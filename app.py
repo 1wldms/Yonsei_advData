@@ -173,7 +173,6 @@ with st.expander("④ 생활 습관", expanded=True):
         sleep_time   = st.number_input("수면 시간 (시간/일)", min_value=1.0, max_value=15.0, value=7.0, step=0.5)
         be8_1 = st.number_input("좌식 시간 (시간)", min_value=0, max_value=23, value=8)
         be8_2 = st.number_input("좌식 시간 (분)", min_value=0, max_value=59, value=0)
-        BO1_1        = st.number_input("하루 좌식 시간 총합 (분)", min_value=0, max_value=1440, value=480)
 
 with st.expander("⑤ 영양 섭취 (1일 기준)", expanded=False):
     c1, c2, c3 = st.columns(3)
@@ -223,8 +222,6 @@ def encode_input():
     row['mh_stress']    = stress_val
     row['sleep_time']   = sleep_time
     row['sitting_time'] = be8_1 * 60 + be8_2
-    if 'BO1_1' in feature_cols:
-        row['BO1_1'] = be8_1 * 60 + be8_2
     row['N_EN']         = N_EN
     row['N_FAT']        = N_FAT
     row['N_PROT']       = N_PROT
