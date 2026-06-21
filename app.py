@@ -119,7 +119,7 @@ with st.expander("① 인구사회학적 정보", expanded=True):
         sex = st.selectbox("성별", ["남성", "여성"])
     with c2:
         edu = st.selectbox("학력", ["중졸 이하", "고졸", "전문대졸", "대졸 이상"])
-        occp = st.selectbox("직업", ["무직/기타", "화이트칼라", "기타직종"])
+        occp = st.selectbox("직업", ["화이트칼라 (관리직·전문직)", "기타직종 (서비스·판매 등)", "블루칼라 (농림·기능·단순노무)"])
     with c3:
         ainc = st.number_input("월평균 가구 소득 (만원)", min_value=0, max_value=2000, value=300, step=10)
         region = st.selectbox("거주지역", ["수도권", "비수도권"])
@@ -171,7 +171,8 @@ with st.expander("④ 생활 습관", expanded=True):
     with c3:
         mh_stress    = st.selectbox("스트레스 인지 수준", ["거의 없음", "조금 있음", "많이 있음", "매우 많이 있음"])
         sleep_time   = st.number_input("수면 시간 (시간/일)", min_value=1.0, max_value=15.0, value=7.0, step=0.5)
-        sitting_time = st.number_input("좌식 시간 (시간/일)", min_value=0.0, max_value=24.0, value=8.0, step=0.5)
+        be8_1 = st.number_input("좌식 시간 (시간)", min_value=0, max_value=23, value=8)
+        be8_2 = st.number_input("좌식 시간 (분)", min_value=0, max_value=59, value=0)
         BO1_1        = st.number_input("하루 좌식 시간 총합 (분)", min_value=0, max_value=1440, value=480)
 
 with st.expander("⑤ 영양 섭취 (1일 기준)", expanded=False):
@@ -190,7 +191,7 @@ with st.expander("⑤ 영양 섭취 (1일 기준)", expanded=False):
 def encode_input():
     sex_val    = 2.0 if sex == "여성" else 1.0
     edu_val    = {"중졸 이하": 1.0, "고졸": 2.0, "전문대졸": 3.0, "대졸 이상": 4.0}[edu]
-    occp_val   = occp
+    occp_val   = {"화이트칼라 (관리직·전문직)": "white", "기타직종 (서비스·판매 등)": "other", "블루칼라 (농림·기능·단순노무)": "blue"}[occp]
     region_val = 1 if region == "수도권" else 0
     pa_val     = 1 if pa_aerobic == "충족" else 0
     smoke_val  = {"비흡연": 1, "과거흡연": 2, "현재흡연": 3}[smoking_cvh]
@@ -221,8 +222,9 @@ def encode_input():
     row['BD2_1']        = BD2_1
     row['mh_stress']    = stress_val
     row['sleep_time']   = sleep_time
-    row['sitting_time'] = sitting_time
-    row['BO1_1']        = BO1_1
+    row['sitting_time'] = be8_1 * 60 + be8_2
+    if 'BO1_1' in feature_cols:
+        row['BO1_1'] = be8_1 * 60 + be8_2
     row['N_EN']         = N_EN
     row['N_FAT']        = N_FAT
     row['N_PROT']       = N_PROT
@@ -248,9 +250,11 @@ def encode_input():
             row[key] = 1 if edu_val == lv else 0
 
     if 'occp_white' in feature_cols:
-        row['occp_white'] = 1 if occp_val == "화이트칼라" else 0
+        row['occp_white'] = 1 if occp_val == "white" else 0
     if 'occp_other' in feature_cols:
-        row['occp_other'] = 1 if occp_val == "기타직종" else 0
+        row['occp_other'] = 1 if occp_val == "other" else 0
+    if 'occp_blue' in feature_cols:
+        row['occp_blue'] = 1 if occp_val == "blue" else 0
 
     df_input = pd.DataFrame([row])[feature_cols]
     cols_to_scale = [c for c in scale_cols if c in df_input.columns]
