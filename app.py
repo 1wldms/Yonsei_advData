@@ -65,7 +65,7 @@ st.set_page_config(page_title="CVD 위험도 예측", page_icon="🫀", layout="
 def load_models():
     with open('cvd_model_single.pkl', 'rb') as f:
         single = pickle.load(f)
-    with open('cvh_model_multi_final.pkl', 'rb') as f:
+    with open('cvh_model_multi.pkl', 'rb') as f:
         multi = pickle.load(f)
     return single, multi
 
