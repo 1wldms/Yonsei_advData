@@ -272,7 +272,7 @@ if st.button("예측하기", type="primary", use_container_width=True):
 
     st.subheader("예측 결과")
     hh_label = "1인가구" if household == "1인가구" else "다인가구"
-    st.caption(f"적용 모델: **{hh_label} 모델** | 임계값: {threshold:.4f} | CVD 확률: {prob:.1%}")
+    st.caption(f"적용 모델: **{hh_label} 모델**")
 
     if pred == 1:
         st.error("⚠️ 심혈관 질환 **위험군**으로 예측되었습니다.")
