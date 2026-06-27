@@ -117,10 +117,14 @@ with st.expander("① 인구사회학적 정보", expanded=True):
 with st.expander("② 신체 계측 및 임상 수치", expanded=True):
     c1, c2, c3 = st.columns(3)
     with c1:
-        HE_HP   = st.number_input("혈압 단계", min_value=1, max_value=3, value=1,
-                                help="1=정상, 2=고혈압전단계, 3=고혈압")
-        HE_obe  = st.number_input("비만도 단계", min_value=1, max_value=6, value=2,
-                                help="1=저체중, 2=정상, 3=비만전단계, 4=1단계비만, 5=2단계비만, 6=3단계비만")
+        HE_HP = st.selectbox(
+            "혈압",
+            options=[1, 2, 3],
+            format_func=lambda x: {1: "정상", 2: "고혈압전단계", 3: "고혈압"}[x])
+        HE_obe  = st.selectbox(
+            "비만도 단계",
+            options=[1, 2, 3, 4, 5, 6],
+            format_func=lambda x: {1: "저체중", 2: "정상", 3: "비만전단계", 4: "1단계비만", 5: "2단계비만", 6: "3단계비만"}[x])
         HE_wt   = st.number_input("체중 (kg)", min_value=20.0, max_value=200.0, value=65.0, step=0.1)
         HE_ht   = st.number_input("신장 (cm)", min_value=100.0, max_value=220.0, value=165.0, step=0.1)
     with c2:
